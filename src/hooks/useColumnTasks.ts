@@ -19,7 +19,7 @@ function useColumnTasks(column: ColumnType) {
 
       const newTask: ITask = {
         id: uuidv4(),
-        title: `New ${column} task`,
+        title: ``,
         color: chakraRandomColor('.300'),
         column,
       };
@@ -59,11 +59,30 @@ function useColumnTasks(column: ColumnType) {
     [column, setTasks]
   );
 
+  const dropTaskFrom = useCallback(
+    (from: ColumnType, id: ITask['id']) => {
+      setTasks((tasks) => {
+        const fromColumnTasks = tasks[from];
+        const toColumnTasks = tasks[column];
+        const draggedTask = fromColumnTasks.find((task) => task.id === id);
+
+        if (!draggedTask) return tasks;
+        return {
+          ...tasks,
+          [from]: fromColumnTasks.filter((task) => task.id !== id),
+          [column]: [{ ...draggedTask, column }, ...toColumnTasks],
+        };
+      });
+    },
+    [column, setTasks]
+  );
+
   return {
     tasks: tasks[column],
     addEmptyTask,
     updateTask,
     deleteTask,
+    dropTaskFrom,
   };
 }
 

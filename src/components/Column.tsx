@@ -3,6 +3,7 @@ import { ColumnType } from '../utils/enums';
 import { AddIcon } from '@chakra-ui/icons';
 import Task from './Task';
 import useColumnTasks from '../hooks/useColumnTasks';
+import useColumnDrop from '../hooks/useColumnDrop';
 
 interface ColumnProps {
   column: ColumnType;
@@ -16,8 +17,8 @@ const ColumnColorScheme: Record<ColumnType, string> = {
 };
 
 const Column = ({ column }: ColumnProps) => {
-  const { tasks, addEmptyTask, updateTask, deleteTask } = useColumnTasks(column);
-
+  const { tasks, addEmptyTask, updateTask, deleteTask, dropTaskFrom } = useColumnTasks(column);
+  const { dropRef, isOver } = useColumnDrop(column, dropTaskFrom);
   const columnTasks = tasks.map((task, index) => (
     <Task key={task.id} task={task} index={index} onUpdate={updateTask} onDelete={deleteTask} />
   ));
@@ -36,14 +37,13 @@ const Column = ({ column }: ColumnProps) => {
         _hover={{ bgColor: useColorModeValue('gray.200', 'gray.600') }}
         py={2}
         variant="solid"
-        // onClick={addEmptyTask}
+        onClick={addEmptyTask}
         colorScheme="black"
         aria-label="add-task"
         icon={<AddIcon />}
-        onClick={addEmptyTask}
       />
       <Stack
-        // ref={dropRef}
+        ref={dropRef}
         direction={{ base: 'row', md: 'column' }}
         h={{ base: 300, md: 600 }}
         p={4}
@@ -54,7 +54,7 @@ const Column = ({ column }: ColumnProps) => {
         rounded="lg"
         boxShadow="md"
         overflow="auto"
-        // opacity={isOver ? 0.85 : 1}
+        opacity={isOver ? 0.85 : 1}
       >
         {columnTasks}
       </Stack>
