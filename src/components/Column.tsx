@@ -1,8 +1,8 @@
 import { Badge, Box, Heading, IconButton, Stack, useColorModeValue } from '@chakra-ui/react';
 import { ColumnType } from '../utils/enums';
 import { AddIcon } from '@chakra-ui/icons';
-import { ITask } from '../utils/types';
 import Task from './Task';
+import useColumnTasks from '../hooks/useColumnTasks';
 
 interface ColumnProps {
   column: ColumnType;
@@ -15,30 +15,11 @@ const ColumnColorScheme: Record<ColumnType, string> = {
   Completed: 'green',
 };
 
-const mockTasks: ITask[] = [
-  {
-    id: '1',
-    title: 'Task 1',
-    column: ColumnType.TO_DO,
-    color: 'red.300',
-  },
-  {
-    id: '2',
-    title: 'Task 2',
-    column: ColumnType.IN_PROGRESS,
-    color: 'blue.300',
-  },
-  {
-    id: '3',
-    title: 'Task 3',
-    column: ColumnType.COMPLETED,
-    color: 'green.300',
-  },
-];
-
 const Column = ({ column }: ColumnProps) => {
-  const columnTasks = mockTasks.map((task, index) => (
-    <Task key={task.id} task={task} index={index} />
+  const { tasks, addEmptyTask, updateTask, deleteTask } = useColumnTasks(column);
+
+  const columnTasks = tasks.map((task, index) => (
+    <Task key={task.id} task={task} index={index} onUpdate={updateTask} onDelete={deleteTask} />
   ));
   return (
     <Box>
@@ -59,6 +40,7 @@ const Column = ({ column }: ColumnProps) => {
         colorScheme="black"
         aria-label="add-task"
         icon={<AddIcon />}
+        onClick={addEmptyTask}
       />
       <Stack
         // ref={dropRef}

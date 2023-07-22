@@ -1,12 +1,24 @@
 import { DeleteIcon } from '@chakra-ui/icons';
-import { Box, IconButton, Textarea } from '@chakra-ui/react';
+import { Box, IconButton } from '@chakra-ui/react';
 import { ITask } from '../utils/types';
+import { TextareaAutosize } from './TextareaAutosize';
 
 interface TaskProps {
   index: number;
   task: ITask;
+  onUpdate: (id: ITask['id'], updatedTask: ITask) => void;
+  onDelete: (id: ITask['id']) => void;
 }
-const Task = ({ index, task }: TaskProps) => {
+const Task = ({ index, task, onUpdate: onUpdate, onDelete }: TaskProps) => {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newTitle = e.target.value;
+    onUpdate(task.id, { ...task, title: newTitle });
+  };
+
+  const handleDeleteClick = () => {
+    onDelete(task.id);
+  };
+
   return (
     <Box
       as="div"
@@ -32,8 +44,9 @@ const Task = ({ index, task }: TaskProps) => {
         colorScheme="solid"
         color="gray.700"
         icon={<DeleteIcon />}
+        onClick={handleDeleteClick}
       />
-      <Textarea
+      <TextareaAutosize
         value={task.title}
         fontWeight="semibold"
         cursor="inherit"
@@ -46,6 +59,7 @@ const Task = ({ index, task }: TaskProps) => {
         outlineOffset={0}
         color="gray.700"
         variant="unstyled"
+        onChange={handleTitleChange}
       />
     </Box>
   );
