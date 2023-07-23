@@ -17,7 +17,7 @@ export function useTaskDragAndDrop<T extends HTMLElement>(
     }),
   });
 
-  const [_, drop] = useDrop<DraggableItem, void, unknown>({
+  const [, drop] = useDrop<DraggableItem, void, unknown>({
     accept: ItemType.TASK,
     hover: (item, monitor) => {
       if (!ref.current) {
@@ -41,7 +41,7 @@ export function useTaskDragAndDrop<T extends HTMLElement>(
       const isDraggedItemBelowHovered = !isDraggedItemAboveHovered;
 
       // get mouse coordinatees
-      const { x: mouseX, y: mouseY } = monitor.getClientOffset() as XYCoord;
+      const { y: mouseY } = monitor.getClientOffset() as XYCoord;
 
       // get hover item rectangle
       const hoveredBoundingRect = ref.current.getBoundingClientRect();
