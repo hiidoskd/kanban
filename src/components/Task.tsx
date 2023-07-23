@@ -65,7 +65,6 @@ const Task = ({ index, task, onUpdate: onUpdate, onDelete }: TaskProps) => {
         color="gray.700"
         variant="unstyled"
         onChange={handleTitleChange}
-        autoFocus
       />
     </Box>
   );
